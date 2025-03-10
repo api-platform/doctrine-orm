@@ -23,6 +23,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Property\Factory\PropertyMetadataFactoryInterface;
 use ApiPlatform\Metadata\Property\Factory\PropertyNameCollectionFactoryInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\JoinColumnMapping;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
@@ -181,7 +182,7 @@ final class EagerLoadingExtension implements QueryCollectionExtensionInterface, 
                 $associationAlias = $existingJoin->getAlias();
                 $isLeftJoin = Join::LEFT_JOIN === $existingJoin->getJoinType();
             } else {
-                $isNullable = $mapping['joinColumns'][0]?->nullable ?? true;
+                $isNullable = isset($mapping['joinColumns']) && isset($mapping['joinColumns'][0]) ? ($mapping['joinColumns'][0] instanceof JoinColumnMapping ? $mapping['joinColumns'][0]->nullable : $mapping['joinColumns'][0]['nullable']) : true;
                 $isLeftJoin = false !== $wasLeftJoin || true === $isNullable;
                 $method = $isLeftJoin ? 'leftJoin' : 'innerJoin';
 
