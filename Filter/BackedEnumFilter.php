@@ -132,7 +132,7 @@ final class BackedEnumFilter extends AbstractFilter
         $normalizedValues = array_filter(array_map(
             fn ($v) => $this->normalizeValue($v, $property),
             $values
-        ));
+        ), static fn ($value) => null !== $value);
 
         if (empty($normalizedValues)) {
             return;
